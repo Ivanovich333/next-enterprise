@@ -1,63 +1,24 @@
-import { Metadata } from "next"
+"use client"
+
+import { useEffect, useState } from "react"
 import { Button } from "components/Button/Button"
 
-export const metadata: Metadata = {
-  title: "Портфолио - Выполненные проекты умного дома",
-  description: "Галерея наших работ по установке систем умного дома. Реализованные проекты автоматизации домов и квартир.",
-}
-
-const projects = [
-  {
-    id: 1,
-    title: "Загородный дом 350 м²",
-    location: "Московская область",
-    description: "Полная автоматизация загородного дома: освещение, климат-контроль, система безопасности, управление воротами и шлагбаумом",
-    features: ["Освещение", "Климат", "Безопасность", "Мультирум"],
-    year: "2024",
-  },
-  {
-    id: 2,
-    title: "Квартира 120 м²",
-    location: "Москва, ЖК «Город столиц»",
-    description: "Беспроводная система автоматизации в готовой квартире без ремонта: умное освещение, управление шторами, климат",
-    features: ["Освещение", "Шторы", "Климат", "Голосовое управление"],
-    year: "2024",
-  },
-  {
-    id: 3,
-    title: "Офисное помещение 200 м²",
-    location: "Москва, БЦ «Белая площадь»",
-    description: "Автоматизация офиса: контроль доступа, управление освещением и кондиционированием, система присутствия",
-    features: ["Контроль доступа", "Освещение", "Климат", "Датчики присутствия"],
-    year: "2023",
-  },
-  {
-    id: 4,
-    title: "Таунхаус 180 м²",
-    location: "Санкт-Петербург",
-    description: "Комплексная система для таунхауса: автоматизация всех помещений, интеграция с солнечными панелями",
-    features: ["Освещение", "Отопление", "Солнечные панели", "Безопасность"],
-    year: "2023",
-  },
-  {
-    id: 5,
-    title: "Пентхаус 250 м²",
-    location: "Москва, ЖК «Кутузовская ривьера»",
-    description: "Премиальная автоматизация: мультирум система, управление всеми инженерными системами, эксклюзивный дизайн панелей",
-    features: ["Мультирум", "Освещение", "Климат", "Шторы", "Камин"],
-    year: "2023",
-  },
-  {
-    id: 6,
-    title: "Коттедж 280 м²",
-    location: "Казань",
-    description: "Умный дом с акцентом на безопасность: видеонаблюдение, сигнализация, контроль протечек, автополив сада",
-    features: ["Видеонаблюдение", "Сигнализация", "Протечки", "Полив сада"],
-    year: "2024",
-  },
-]
-
 export default function Portfolio() {
+  const [projects, setProjects] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/portfolio?published=true')
+      .then(r => r.json())
+      .then(data => {
+        setProjects(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Error loading portfolio:', err)
+        setLoading(false)
+      })
+  }, [])
   return (
     <>
       {/* Header */}
@@ -75,46 +36,73 @@ export default function Portfolio() {
       {/* Projects Grid */}
       <section className="bg-white dark:bg-gray-800">
         <div className="mx-auto max-w-7xl px-4 pt-0 pb-16 sm:pb-20 lg:px-6">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project) => (
-              <div
-                key={project.id}
-                className="flex flex-col bg-gray-50 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer dark:bg-gray-700"
-              >
-                {/* Image Placeholder */}
-                <div className="bg-gray-200 dark:bg-gray-600 h-48 flex items-center justify-center">
-                  <span className="text-gray-400 dark:text-gray-500 text-sm">
-                    Фото проекта
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="mb-2 text-sm text-blue-600 dark:text-blue-400">
-                    {project.year} • {project.location}
+          {loading ? (
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+              Загрузка проектов...
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+              Проекты пока не добавлены
+            </div>
+          ) : (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project) => (
+                <div
+                  key={project.id}
+                  className="flex flex-col bg-gray-50 rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer dark:bg-gray-700"
+                >
+                  {/* Image */}
+                  <div className="bg-gray-200 dark:bg-gray-600 h-48 overflow-hidden">
+                    {project.image ? (
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <span className="text-gray-400 dark:text-gray-500 text-sm">
+                          Фото проекта
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
-                    {project.title}
-                  </h3>
-                  <p className="mb-4 text-gray-600 dark:text-gray-300 flex-1">
-                    {project.description}
-                  </p>
 
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.features.map((feature) => (
-                      <span
-                        key={feature}
-                        className="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full dark:bg-blue-900 dark:text-blue-200"
-                      >
-                        {feature}
-                      </span>
-                    ))}
+                  {/* Content */}
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="mb-2 text-sm text-blue-600 dark:text-blue-400">
+                      {project.year && `${project.year}`}
+                      {project.year && project.location && ' • '}
+                      {project.location}
+                    </div>
+                    <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
+                      {project.title}
+                    </h3>
+                    <p className="mb-4 text-gray-600 dark:text-gray-300 flex-1">
+                      {project.description || 'Описание проекта'}
+                    </p>
+
+                    {/* Category & Area */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.category && (
+                        <span className="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full dark:bg-blue-900 dark:text-blue-200">
+                          {project.category === 'apartment' ? 'Квартира' : project.category === 'house' ? 'Дом' : 'Офис'}
+                        </span>
+                      )}
+                      {project.area && (
+                        <span className="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full dark:bg-green-900 dark:text-green-200">
+                          {project.area}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

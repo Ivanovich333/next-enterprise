@@ -75,6 +75,19 @@ function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; d
 export default function Home() {
   const [currentReview, setCurrentReview] = useState(0)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [projects, setProjects] = useState<any[]>([])
+  const [reviews, setReviews] = useState<any[]>([])
+
+  // Load data from API (only projects and reviews)
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/portfolio?published=true').then(r => r.json()),
+      fetch('/api/reviews?published=true').then(r => r.json()),
+    ]).then(([portfolioData, reviewsData]) => {
+      setProjects(portfolioData.map((p: any) => ({ id: p.id, image: p.image, title: p.title })))
+      setReviews(reviewsData)
+    }).catch(console.error)
+  }, [])
 
   const whyUs = [
     { icon: Star, number: 200, suffix: "+", label: "Завершенных проектов" },
@@ -86,7 +99,7 @@ export default function Home() {
   const packages = [
     {
       name: "Базовый",
-      price: "от 150 000 ₽",
+      price: "от 15 млн сум",
       popular: false,
       features: [
         "Умное освещение (3 комнаты)",
@@ -98,7 +111,7 @@ export default function Home() {
     },
     {
       name: "Комфорт",
-      price: "от 350 000 ₽",
+      price: "от 35 млн сум",
       popular: true,
       features: [
         "Всё из пакета 'Базовый'",
@@ -111,7 +124,7 @@ export default function Home() {
     },
     {
       name: "Премиум",
-      price: "от 600 000 ₽",
+      price: "от 60 млн сум",
       popular: false,
       features: [
         "Всё из пакета 'Комфорт'",
@@ -124,7 +137,7 @@ export default function Home() {
     },
     {
       name: "VIP",
-      price: "от 1 200 000 ₽",
+      price: "от 120 млн сум",
       popular: false,
       features: [
         "Всё из пакета 'Премиум'",
@@ -165,14 +178,7 @@ export default function Home() {
     },
   ]
 
-  const projects = [
-    { id: 1, image: "/images/project1.jpg", title: "Квартира в Москва-Сити" },
-    { id: 2, image: "/images/project2.jpg", title: "Загородный дом" },
-    { id: 3, image: "/images/project3.jpg", title: "Офисное здание" },
-    { id: 4, image: "/images/project4.jpg", title: "Пентхаус" },
-    { id: 5, image: "/images/project5.jpg", title: "Коттедж" },
-    { id: 6, image: "/images/project6.jpg", title: "Квартира-студия" },
-  ]
+  // projects loaded from API
 
   const partners = [
     { name: "Xiaomi", logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/Xiaomi_logo.svg", fallback: "🏠" },
@@ -183,34 +189,12 @@ export default function Home() {
     { name: "Zigbee", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Zigbee_logo.svg", fallback: "📡" },
   ]
 
-  const reviews = [
-    {
-      name: "Александр Петров",
-      project: "Квартира 120м²",
-      rating: 5,
-      text: "Отличная работа! Все сделали быстро и качественно. Теперь управляю всем домом с телефона. Особенно нравится автоматизация освещения и климата.",
-      avatar: "👨‍💼",
-    },
-    {
-      name: "Мария Иванова",
-      project: "Загородный дом 300м²",
-      rating: 5,
-      text: "Профессиональный подход на всех этапах. Инженеры помогли выбрать оптимальное решение под наш бюджет. Система работает безупречно уже год.",
-      avatar: "👩‍💼",
-    },
-    {
-      name: "Дмитрий Соколов",
-      project: "Офис 200м²",
-      rating: 5,
-      text: "Установили систему в нашем офисе. Экономия на электричестве окупила затраты за 8 месяцев. Рекомендую для бизнеса!",
-      avatar: "👨‍💻",
-    },
-  ]
+  // reviews loaded from API
 
   const faqs = [
     {
       question: "Сколько стоит установка умного дома?",
-      answer: "Стоимость зависит от площади объекта и набора функций. Базовое решение для квартиры от 150 000 ₽. Предлагаем бесплатную консультацию для точного расчета.",
+      answer: "Стоимость зависит от площади объекта и набора функций. Базовое решение для квартиры от 15 млн сум. Предлагаем бесплатную консультацию для точного расчета.",
     },
     {
       question: "Сколько времени займет установка?",
@@ -424,9 +408,19 @@ export default function Home() {
                 key={project.id}
                 className="group relative overflow-hidden rounded-xl aspect-[4/3] bg-gray-200 dark:bg-gray-700 cursor-pointer"
               >
+                {project.image && (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20 group-hover:opacity-10 transition-opacity duration-300">
-                  🏠
+                  {!project.image && '🏠'}
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-lg font-bold">{project.title}</h3>

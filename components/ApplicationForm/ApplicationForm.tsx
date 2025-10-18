@@ -141,8 +141,22 @@ export function ApplicationForm({ onSubmit, className = "" }: ApplicationFormPro
       if (onSubmit) {
         await onSubmit(formData)
       } else {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        // Send to API
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            message: `${formData.serviceType}: ${formData.comment}`,
+            source: "website_form",
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to submit")
+        }
       }
 
       setSubmitStatus("success")
