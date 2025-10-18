@@ -1,7 +1,5 @@
 "use client"
 
-import { Metadata } from "next"
-import { Button } from "components/Button/Button"
 import { useEffect, useRef, useState } from "react"
 
 const services = [
@@ -102,7 +100,7 @@ function ServiceCard({ service, index }: { service: typeof services[0]; index: n
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setTimeout(() => setIsVisible(true), index * 100)
         }
       },

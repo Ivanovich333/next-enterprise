@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Menu, X, Phone, Home as HomeIcon } from "lucide-react"
+import { Home as HomeIcon, Menu, Phone, X } from "lucide-react"
 
 const navLinks = [
   { href: "/", label: "Главная" },

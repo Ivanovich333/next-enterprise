@@ -1,9 +1,8 @@
 "use client"
 
-import { Metadata } from "next"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "components/Button/Button"
-import { CheckCircle, Clock, Shield, Star, Users, Zap, ChevronRight, ChevronLeft, Home as HomeIcon, Settings, Wrench, PhoneCall, Plus, Minus } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { CheckCircle, ChevronLeft, ChevronRight, Clock, Home as HomeIcon, Minus, PhoneCall, Plus, Settings, Shield, Star, Users, Wrench } from "lucide-react"
 
 const benefits = [
   {
@@ -41,7 +40,7 @@ function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; d
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
+        if (entry?.isIntersecting && !hasAnimated) {
           setHasAnimated(true)
           const startTime = Date.now()
           const animate = () => {
@@ -461,6 +460,7 @@ export default function Home() {
                 className="flex flex-col items-center justify-center p-6 bg-white rounded-lg hover:shadow-lg transition-all dark:bg-gray-800"
               >
                 {partner.logo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={partner.logo}
                     alt={partner.name}
@@ -496,18 +496,18 @@ export default function Home() {
           <div className="relative max-w-4xl mx-auto">
             <div className="bg-gray-50 rounded-xl p-8 md:p-12 dark:bg-gray-700">
               <div className="flex flex-col md:flex-row gap-6 items-center">
-                <div className="text-7xl flex-shrink-0">{reviews[currentReview].avatar}</div>
+                <div className="text-7xl flex-shrink-0">{reviews[currentReview]?.avatar}</div>
                 <div className="flex-grow text-center md:text-left">
                   <div className="flex justify-center md:justify-start gap-1 mb-3">
-                    {[...Array(reviews[currentReview].rating)].map((_, i) => (
+                    {[...Array(reviews[currentReview]?.rating || 5)].map((_, i) => (
                       <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
                   <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 italic">
-                    "{reviews[currentReview].text}"
+                    "{reviews[currentReview]?.text}"
                   </p>
-                  <div className="font-bold text-gray-900 dark:text-white">{reviews[currentReview].name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{reviews[currentReview].project}</div>
+                  <div className="font-bold text-gray-900 dark:text-white">{reviews[currentReview]?.name}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{reviews[currentReview]?.project}</div>
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Phone, Mail, MapPin, Clock, Check, X } from "lucide-react"
+import { Check, Clock, Mail, MapPin, Phone, X } from "lucide-react"
 
 const contactInfo = [
   {

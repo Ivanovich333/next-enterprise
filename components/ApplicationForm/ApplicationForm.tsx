@@ -153,7 +153,7 @@ export function ApplicationForm({ onSubmit, className = "" }: ApplicationFormPro
         serviceType: "",
         comment: "",
       })
-    } catch (error) {
+    } catch {
       setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)

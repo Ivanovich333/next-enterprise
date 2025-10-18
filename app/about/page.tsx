@@ -1,16 +1,15 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Metadata } from "next"
+import { useEffect, useRef, useState } from "react"
 import {
+  Award,
+  CheckCircle,
+  Headphones,
+  Lightbulb,
+  MapPin,
   Shield,
   Target,
-  Lightbulb,
-  Headphones,
-  CheckCircle,
-  Award,
   Users,
-  MapPin
 } from "lucide-react"
 
 // Animated Counter Component
@@ -22,7 +21,7 @@ function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; d
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
+        if (entry?.isIntersecting && !hasAnimated) {
           setHasAnimated(true)
           const startTime = Date.now()
           const animate = () => {
@@ -55,14 +54,14 @@ function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; d
 }
 
 // Value Card Component
-function ValueCard({ icon: Icon, title, description }: { icon: any; title: string; description: string }) {
+function ValueCard({ icon: Icon, title, description }: { icon: React.ElementType; title: string; description: string }) {
   const [isVisible, setIsVisible] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsVisible(true)
         }
       },
@@ -100,7 +99,7 @@ function TeamCard({ name, position, description, initials }: { name: string; pos
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setIsVisible(true)
         }
       },
