@@ -6,11 +6,12 @@ import { prisma } from "@/lib/prisma"
 // GET - получить один проект
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const project = await prisma.portfolio.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!project) {
@@ -30,7 +31,7 @@ export async function GET(
 // PUT - обновить проект
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -38,11 +39,12 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const { id } = await params
     const body = await request.json()
     const { title, description, image, category, location, area, year, published, order } = body
 
     const project = await prisma.portfolio.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -69,7 +71,7 @@ export async function PUT(
 // DELETE - удалить проект
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -77,8 +79,9 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const { id } = await params
     await prisma.portfolio.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })

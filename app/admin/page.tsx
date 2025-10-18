@@ -1,10 +1,9 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { Button } from "components/Button/Button"
-import { FileText, MessageSquare, Users, Package, Phone, LogOut } from "lucide-react"
+import { signOut, useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { FileText, LogOut, MessageSquare, Phone } from "lucide-react"
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
