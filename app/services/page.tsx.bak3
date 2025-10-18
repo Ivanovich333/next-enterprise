@@ -1,0 +1,334 @@
+"use client"
+
+import { Metadata } from "next"
+import { Button } from "components/Button/Button"
+import { useEffect, useRef, useState } from "react"
+
+const services = [
+  {
+    title: "Установка с нуля",
+    description: "Полный цикл от проектирования до запуска",
+    fullDescription: "Идеальное решение для новостроек и объектов на стадии ремонта",
+    features: [
+      "Проектирование системы автоматизации",
+      "Монтаж кабельных линий и оборудования",
+      "Настройка и программирование",
+      "Обучение использованию системы",
+    ],
+  },
+  {
+    title: "Установка под ключ",
+    description: "Комплексное решение без вашего участия",
+    fullDescription: "Полный цикл работ от консультации до запуска",
+    features: [
+      "Подбор оптимального оборудования",
+      "Поставка и установка",
+      "Настройка сценариев",
+      "Гарантийное обслуживание",
+    ],
+  },
+  {
+    title: "Установка в готовые объекты",
+    description: "Интеграция в существующий интерьер",
+    fullDescription: "Беспроводные решения без ремонта",
+    features: [
+      "Обследование объекта",
+      "Адаптация под интерьер",
+      "Быстрый монтаж без пыли",
+      "Модульное расширение",
+    ],
+  },
+]
+
+const workProcess = [
+  {
+    step: "01",
+    title: "Консультация",
+    description: "Выезд специалиста, осмотр объекта и обсуждение ваших потребностей",
+  },
+  {
+    step: "02",
+    title: "Проектирование",
+    description: "Разработка технического решения и подбор оборудования",
+  },
+  {
+    step: "03",
+    title: "Монтаж",
+    description: "Установка оборудования и прокладка коммуникаций",
+  },
+  {
+    step: "04",
+    title: "Настройка",
+    description: "Программирование системы и создание сценариев автоматизации",
+  },
+  {
+    step: "05",
+    title: "Сдача проекта",
+    description: "Обучение использованию и передача документации",
+  },
+]
+
+const systems = [
+  {
+    name: "Освещение",
+    description: "Умное управление светом",
+  },
+  {
+    name: "Климат",
+    description: "Контроль температуры",
+  },
+  {
+    name: "Безопасность",
+    description: "Охрана и видеонаблюдение",
+  },
+  {
+    name: "Развлечения",
+    description: "Мультирум аудио/видео",
+  },
+  {
+    name: "Шторы",
+    description: "Автоматические жалюзи",
+  },
+  {
+    name: "Полив",
+    description: "Система автополива",
+  },
+]
+
+function ServiceCard({ service, index }: { service: typeof services[0]; index: number }) {
+  const [isVisible, setIsVisible] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => setIsVisible(true), index * 100)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [index])
+
+  return (
+    <div
+      ref={cardRef}
+      className={`group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 transition-all duration-300 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } hover:border-gray-900 dark:hover:border-gray-500`}
+    >
+      {/* Number */}
+      <div className="text-sm font-mono text-gray-400 dark:text-gray-500 mb-6">
+        0{index + 1}
+      </div>
+
+      {/* Title & Description */}
+      <h3 className="text-2xl font-semibold mb-3 text-gray-900 dark:text-white">
+        {service.title}
+      </h3>
+      <p className="text-base mb-2 text-gray-600 dark:text-gray-400">
+        {service.description}
+      </p>
+      <p className="text-sm mb-6 text-gray-500 dark:text-gray-500">
+        {service.fullDescription}
+      </p>
+
+      {/* Features */}
+      <div className="mb-8 space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
+        {service.features.map((feature, idx) => (
+          <div key={idx} className="flex items-start text-sm text-gray-700 dark:text-gray-300">
+            <span className="mr-3 text-gray-400">—</span>
+            <span>{feature}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA Link */}
+      <a
+        href="/contacts"
+        className="inline-flex items-center text-sm font-medium text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+      >
+        Заказать консультацию
+        <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  )
+}
+
+export default function Services() {
+  return (
+    <>
+      {/* Header */}
+      <section className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-16 lg:py-20">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+              Услуги
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+              Профессиональная установка систем умного дома. От проектирования до запуска.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Cards */}
+      <section className="bg-white dark:bg-gray-900 py-16">
+        <div className="mx-auto max-w-(--breakpoint-xl) px-4 lg:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <ServiceCard key={service.title} service={service} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What We Install */}
+      <section className="bg-gray-50 dark:bg-gray-950 py-16 border-y border-gray-200 dark:border-gray-800">
+        <div className="mx-auto max-w-(--breakpoint-xl) px-4 lg:px-6">
+          <div className="mb-16">
+            <h2 className="text-3xl font-semibold text-gray-900 dark:text-white mb-3">
+              Системы автоматизации
+            </h2>
+            <p className="text-base text-gray-600 dark:text-gray-400">
+              Что мы интегрируем в ваш дом
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 dark:bg-gray-800 border border-gray-200 dark:border-gray-800">
+            {systems.map((system, index) => (
+              <div
+                key={system.name}
+                className="group bg-white dark:bg-gray-950 p-8 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-xs font-mono text-gray-400 dark:text-gray-600">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-gray-900 dark:group-hover:bg-gray-300 transition-colors" />
+                </div>
+                <h3 className="font-medium text-xl text-gray-900 dark:text-white mb-2">
+                  {system.name}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {system.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Work Process */}
+      <section className="bg-gray-900 dark:bg-gray-950 py-16">
+        <div className="mx-auto max-w-(--breakpoint-xl) px-4 lg:px-6">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+            {/* Left Column - Header */}
+            <div className="lg:sticky lg:top-24 lg:self-start">
+              <h2 className="text-4xl lg:text-5xl font-semibold text-white mb-6 leading-tight">
+                Как мы работаем
+              </h2>
+              <p className="text-lg text-gray-400 mb-12 leading-relaxed">
+                Пять этапов от консультации до запуска. Прозрачный процесс с понятными сроками и результатами на каждом шаге.
+              </p>
+
+              {/* Timeline Summary */}
+              <div className="space-y-8 pt-8 border-t border-gray-800">
+                <div>
+                  <p className="text-sm text-gray-500 mb-2">
+                    Средний срок реализации
+                  </p>
+                  <p className="text-3xl font-semibold text-white">
+                    2–6 недель
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500 mb-2">
+                    Гарантия на работы
+                  </p>
+                  <p className="text-3xl font-semibold text-white">
+                    2 года
+                  </p>
+                </div>
+
+                <a
+                  href="/contacts"
+                  className="inline-flex items-center px-6 py-3 border border-white text-sm font-medium text-white hover:bg-white hover:text-gray-900 transition-colors rounded-lg"
+                >
+                  Начать проект
+                  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column - Steps */}
+            <div className="relative before:absolute before:left-7 before:top-7 before:h-[calc(100%-5rem)] before:w-px before:bg-gray-800 before:content-['']">
+              {workProcess.map((step, index) => (
+                <div
+                  key={step.step}
+                  className="group relative flex items-start gap-6 pb-16 last:pb-0"
+                >
+                  {/* Step Number Circle */}
+                  <div className="relative flex-shrink-0">
+                    <div className="w-14 h-14 rounded-full bg-gray-900 border-2 border-white flex items-center justify-center group-hover:bg-white transition-colors relative z-10">
+                      <span className="text-xl font-semibold text-white group-hover:text-gray-900 transition-colors">
+                        {index + 1}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 pt-3">
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <h3 className="font-semibold text-xl text-white">
+                        {step.title}
+                      </h3>
+                      <span className="text-xs font-mono text-gray-600">
+                        {step.step}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gray-900 dark:bg-black py-16">
+        <div className="mx-auto max-w-(--breakpoint-xl) px-4 text-center">
+          <h2 className="mb-6 text-3xl font-semibold text-white">
+            Обсудим ваш проект
+          </h2>
+          <p className="mb-8 text-base text-gray-400 max-w-xl mx-auto">
+            Оставьте заявку для бесплатной консультации
+          </p>
+          <a
+            href="/contacts"
+            className="inline-flex items-center text-sm font-medium text-white hover:text-gray-300 transition-colors"
+          >
+            Связаться с нами
+            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+      </section>
+    </>
+  )
+}
