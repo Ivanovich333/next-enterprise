@@ -180,9 +180,24 @@ export default function Contacts() {
 
     setIsSubmitting(true)
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      // Send to API
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          message: `Тип услуги: ${formData.serviceType || "Не указан"}\nПлощадь: ${formData.area || "Не указана"}\n\n${formData.message}`,
+          source: "contacts_page",
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit")
+      }
+
       setShowModal(true)
       setFormData({
         name: "",
@@ -195,7 +210,12 @@ export default function Contacts() {
       })
       setTouched(new Set())
       setErrors({})
-    }, 1500)
+    } catch (error) {
+      console.error("Failed to submit form:", error)
+      alert("Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const isFieldValid = (fieldName: string) => {
