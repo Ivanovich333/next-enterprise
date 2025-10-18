@@ -4,8 +4,11 @@ import { sendTelegramNotification, formatContactRequestMessage } from "@/lib/tel
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("📬 New contact request received")
     const body = await request.json()
     const { name, phone, email, message, source } = body
+
+    console.log("📝 Request data:", { name, phone, email, source })
 
     // Валидация
     if (!name || !phone) {
@@ -16,6 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Сохранение в БД
+    console.log("💾 Saving to database...")
     const contactRequest = await prisma.contactRequest.create({
       data: {
         name,
@@ -25,8 +29,10 @@ export async function POST(request: NextRequest) {
         source: source || "website",
       },
     })
+    console.log("✅ Saved to database, ID:", contactRequest.id)
 
     // Отправка уведомления в Telegram
+    console.log("📱 Preparing Telegram notification...")
     const telegramMessage = formatContactRequestMessage({
       name,
       phone,
@@ -34,7 +40,8 @@ export async function POST(request: NextRequest) {
       message,
     })
 
-    await sendTelegramNotification(telegramMessage)
+    const telegramSent = await sendTelegramNotification(telegramMessage)
+    console.log("📱 Telegram notification result:", telegramSent ? "SUCCESS" : "FAILED")
 
     return NextResponse.json(
       { success: true, id: contactRequest.id },
